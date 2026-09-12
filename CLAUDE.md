@@ -163,3 +163,21 @@ même bas, la rangée de commandes sur une ligne), le budget mobile (titre de la
 vue → bas du curseur ≤ 715 px, bulle repliée), le médaillon, la bascule 🔇/🔊,
 les sondes de pixels du Soleil, zéro erreur console. Servir avant :
 `python3 -m http.server 8123`.
+
+## Le conteur : les clips en mémoire
+
+Acquis de `la-terre-est-penchee`, porté en septembre 2026. Safari iOS ne
+réutilise pas le cache d'un `fetch` pour un `<audio>` : le « préchauffage »
+du bloc suivant ne servait à rien — silences de une à trois secondes entre
+deux phrases selon le réseau. Au départ d'une narration, **tous ses clips se
+téléchargent en parallèle en blobs** et se jouent depuis ces blobs (gardés
+pour la session). Le premier clip part en `src` direct, dans le geste (iOS
+n'autorise le premier `play()` que là) — SAUF si son blob est déjà là
+(`clipsPrets`, lu de façon synchrone, donc toujours dans le geste) : le jeu
+ne parle qu'en narrations d'un seul bloc (consigne, bravo), toujours « le
+premier », qui partaient donc toujours à froid, même rejouées (retour
+utilisateur, iPhone : le bravo s'affichait une bonne seconde avant la voix).
+Le bravo, déclenché hors geste par la boucle d'animation, **se précharge au
+tirage du défi** (`prechargerBravoDefi`, aussi à la remise du son jeu
+ouvert). Le manifeste est encore vide (synthèse seule) : la règle est en place pour
+le jour où la voix sera tirée.
