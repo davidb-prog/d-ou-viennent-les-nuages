@@ -181,3 +181,15 @@ Le bravo, déclenché hors geste par la boucle d'animation, **se précharge au
 tirage du défi** (`prechargerBravoDefi`, aussi à la remise du son jeu
 ouvert). Le manifeste est encore vide (synthèse seule) : la règle est en place pour
 le jour où la voix sera tirée.
+**Et le premier clip a la route pour lui** (acquis de `la-terre-est-penchee`,
+réseau faible : « retard à l'allumage » sur les boutons et la consigne du
+jeu) : UNE file de fond (`fileDeFond`, un téléchargement à la fois), GELÉE
+tant qu'un premier clip part à froid en src direct (`premierClipEnRoute`,
+libérée à `playing`, à l'erreur, au stop, ou après 8 s) ; les blocs
+suivants d'une narration y entrent en tête, dans l'ordre du récit, le
+premier bloc en dernier ; les réchauffements en queue. Et le
+**réchauffement des premiers clips** (`rechaufferPremiersClips`) : quand la
+rangée des scénarios ou le bouton « Jouer » entre à l'écran (repli :
+premier toucher), les intros et les consignes entrent dans la file — voix
+active seulement, manifeste arrivé (sinon on repasse à son arrivée), jamais
+à l'ouverture de la page.
