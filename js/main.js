@@ -771,6 +771,7 @@ if (window.speechSynthesis && window.SpeechSynthesisUtterance) {
   };
   boutonEcouter.addEventListener('click', function () {
     if (lectureEnCours) { narrateur.stop(); return; }
+    if (window.jalon) window.jalon('audio'); /* jalon d'engagement (mesure.js) */
     lireExplication();
   });
 
@@ -804,7 +805,10 @@ function basculerVoix() {
   try { window.localStorage.setItem('petit-labo-son', voixActive ? '1' : '0'); } catch (e) { /* tant pis */ }
   rafraichirBoutonsVoix();
   if (!narrateur) return;
-  if (voixActive) { raconterScenario(); prechargerBravoDefi(); demanderRechauffement(); } else narrateur.stop();
+  if (voixActive) {
+    if (window.jalon) window.jalon('audio'); /* le conteur des scénarios compte aussi */
+    raconterScenario(); prechargerBravoDefi(); demanderRechauffement();
+  } else narrateur.stop();
 }
 
 /* Le RÉCHAUFFEMENT des premiers clips (retour utilisateur sur
@@ -954,6 +958,7 @@ function gagnerDefi(maintenant) {
   bravoJeu.hidden = false;
   boutonEncore.hidden = false;
   if (premiere) {
+    if (window.jalon) window.jalon('fin'); /* premier défi gagné : l'épisode est allé au bout */
     raconterDefi('bravo', defi.bravo);
     /* Le recalage doux : la goutte glisse jusqu'au cœur du moment, par le
      * chemin court. Rien n'est verrouillé : un glisser annule aussitôt. */
