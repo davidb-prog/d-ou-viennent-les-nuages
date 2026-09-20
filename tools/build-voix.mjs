@@ -1,7 +1,13 @@
 // Génère la voix enregistrée du conteur avec ElevenLabs — outil HORS site :
 // le site reste 100 % statique, les mp3 sont commités, aucune clé ne le touche.
 //
-//   ELEVENLABS_API_KEY=…  ELEVENLABS_VOICE_ID=…  node tools/build-voix.mjs
+//   node tools/build-voix.mjs                   (ELEVENLABS_VOICE_ID=… la première fois)
+//
+// La clé API se lit dans le fichier `.cle-elevenlabs` à la racine du dépôt
+// (gitignoré, chmod 600 — le seul rangement de la famille, voir
+// references/voix-enregistree.md du skill petit-labo), ou à défaut dans la
+// variable d'environnement ELEVENLABS_API_KEY. Jamais dans le dépôt, jamais
+// dans une conversation.
 //
 // Options :
 //   --dry-run          liste les blocs (à générer / à jour) et le coût en
@@ -74,7 +80,13 @@ if (VITESSE !== null && !(VITESSE >= 0.7 && VITESSE <= 1.2)) {
 }
 
 const manifeste = lireManifeste();
-const cle = process.env.ELEVENLABS_API_KEY || '';
+// la clé : le fichier gitignoré d'abord, la variable d'environnement en secours
+function lireCle() {
+  const fichier = racine + '.cle-elevenlabs';
+  if (existsSync(fichier)) return readFileSync(fichier, 'utf8').trim();
+  return process.env.ELEVENLABS_API_KEY || '';
+}
+const cle = lireCle();
 // la voix : --voice, sinon la variable d'environnement, sinon celle déjà
 // retenue dans le manifeste (pratique pour les retouches --only)
 const voix = valeur('--voice') || process.env.ELEVENLABS_VOICE_ID || manifeste.voix || '';
@@ -307,7 +319,7 @@ function contexteDe(b) {
 if (drapeau('--essai') || valeur('--essai')) {
   const ids = (valeur('--essai') || '').split(',').filter(Boolean);
   if (!cle || ids.length === 0) {
-    console.error('usage : ELEVENLABS_API_KEY=… node tools/build-voix.mjs --essai voiceId1,voiceId2');
+    console.error('usage : node tools/build-voix.mjs --essai voiceId1,voiceId2 (clé dans .cle-elevenlabs)');
     process.exit(1);
   }
   mkdirSync(racine + 'tools/essais', { recursive: true });
@@ -320,7 +332,7 @@ if (drapeau('--essai') || valeur('--essai')) {
     console.log('ok (tools/essais/essai-' + v + '.mp3)');
   }
   console.log('\nÉcouter les essais, puis générer tout avec la voix choisie :');
-  console.log('  ELEVENLABS_API_KEY=… ELEVENLABS_VOICE_ID=<gagnante> node tools/build-voix.mjs');
+  console.log('  ELEVENLABS_VOICE_ID=<gagnante> node tools/build-voix.mjs');
   process.exit(0);
 }
 
@@ -351,7 +363,7 @@ if (aFaire.length === 0) {
   process.exit(0);
 }
 if (!cle || !voix) {
-  console.error('Il faut ELEVENLABS_API_KEY et ELEVENLABS_VOICE_ID (ou --voice).');
+  console.error('Il faut la clé (.cle-elevenlabs ou ELEVENLABS_API_KEY) et ELEVENLABS_VOICE_ID (ou --voice).');
   process.exit(1);
 }
 

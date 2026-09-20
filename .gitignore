@@ -1,0 +1,12 @@
+# La clé ElevenLabs de la voix enregistrée : sur la machine de l'utilisateur,
+# jamais dans le dépôt (voir docs/voix-conteur.md)
+.cle-elevenlabs
+
+# Ce que l'outillage de la voix écrit à côté du site (essais de voix, pages
+# d'écoute et de contrôle, cache du contrôle) : à écouter, jamais à commiter
+tools/essais/
+tools/ecoute.html
+tools/controle.html
+tools/controle-cache.json
+
+.DS_Store
