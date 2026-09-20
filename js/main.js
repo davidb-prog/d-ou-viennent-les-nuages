@@ -168,8 +168,11 @@ window.addEventListener('pointercancel', function () { curseurTenu = false; });
 /* Le geste-signature : promener la goutte                              */
 /* ------------------------------------------------------------------ */
 
+/* La bulle « attrape-moi » est éphémère sur MOBILE seulement (8 s ou le
+ * premier geste : ses ~32 px décident si la frise tient dans l'écran) ; sur
+ * ordinateur elle reste, la place ne manque pas (décision utilisateur). */
 function cacherBulleGeste() {
-  if (bulleGeste) bulleGeste.classList.add('cachee');
+  if (bulleGeste && estMobile) bulleGeste.classList.add('cachee');
 }
 window.setTimeout(cacherBulleGeste, 8000);
 

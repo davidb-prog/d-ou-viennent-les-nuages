@@ -203,7 +203,8 @@ main { max-width: 1180px; margin: 0 auto; padding: 0 20px 60px; }
 }
 #phrase-loupe { min-height: 4.35em; }
 
-/* la bulle « attrape-moi », SOUS la vue qu'on manipule (transitoire) */
+/* la bulle « attrape-moi », SOUS la vue qu'on manipule (éphémère sur
+   mobile, elle reste sur ordinateur) */
 .bulle-geste {
   margin: 8px 0 0; text-align: center; overflow: hidden;
   pointer-events: none; opacity: 1; max-height: 90px;

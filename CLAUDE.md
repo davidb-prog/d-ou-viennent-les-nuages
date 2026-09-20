@@ -114,6 +114,8 @@ Vérités verrouillées par `test/model.test.mjs` (à compléter, jamais supprim
   ni sur le point d'arrivée d'un scénario (`pFabrique`).
 - **Sur mobile**, le médaillon flottant montre la loupe quand elle est hors
   écran, s'ancre dans l'en-tête du jeu pendant le jeu ; le jeu n'a qu'une vue.
+  La bulle « attrape-moi » y est éphémère (8 s ou le premier geste) ; sur
+  ordinateur elle reste.
 - **Choisir ne dérègle pas** : sélectionner un moment ne déclenche la voix que si
   le bouton 🔇/🔊 est allumé.
 
