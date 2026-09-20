@@ -167,6 +167,8 @@ main { max-width: 1180px; margin: 0 auto; padding: 0 20px 60px; }
 }
 
 .bloc-vue { min-width: 0; }
+/* les lignes de titre des vues sont des h2 (charte) : taille et marges
+   posées ici, jamais celles du navigateur */
 .entete-vue {
   font-weight: 800; font-size: 1.02rem; margin: 0 2px 7px;
   display: flex; align-items: center; gap: 6px;

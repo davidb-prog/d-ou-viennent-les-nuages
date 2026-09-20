@@ -77,7 +77,7 @@
 
       <div class="grille-vues">
         <div class="bloc-vue">
-          <div class="entete-vue entete-vue-dehors">🏔️ Dehors <span class="hint">la mer, la montagne, et le Soleil qui chauffe</span></div>
+          <h2 class="entete-vue entete-vue-dehors">🏔️ Dehors <span class="hint">la mer, la montagne, et le Soleil qui chauffe</span></h2>
           <div class="cadre-canvas ratio-dehors">
             <canvas id="canvas-dehors"
               aria-label="Le paysage : la mer à gauche, la montagne enneigée à droite, le Soleil fixe en haut à gauche. Une goutte d’eau souriante fait son grand voyage : elle flotte dans la mer, s’envole en vapeur invisible quand le Soleil la chauffe, réapparaît dans le froid tout en haut pour faire un nuage, tombe en pluie sur la montagne, et revient à la mer par la rivière. Attrape la goutte avec le doigt ou la souris et promène-la le long de son chemin en pointillés."></canvas>
@@ -91,11 +91,11 @@
           <!-- le ⏸/▶ vit ICI, dans la ligne de la seconde vue : sur téléphone il
                reste sous le pouce ; sur grand écran le CSS le pose en haut à
                droite du panneau (un seul bouton, un seul câblage) -->
-          <div class="entete-vue entete-vue-loupe"><span class="titre-vue">🔍 De tout près</span>
+          <h2 class="entete-vue entete-vue-loupe"><span class="titre-vue">🔍 De tout près</span>
             <button id="bouton-lecture" class="bouton-lecture" aria-pressed="true"><span
                 class="lecture-on" aria-hidden="true">⏸ Pause</span><span
                 class="lecture-off" aria-hidden="true">▶ Lecture</span></button>
-            <span class="hint">la même eau, vue à la loupe</span></div>
+            <span class="hint">la même eau, vue à la loupe</span></h2>
           <div class="cadre-canvas ratio-loupe">
             <canvas id="canvas-loupe"
               aria-label="La loupe : la même eau vue de tout près. Douze billes d’eau serrées les unes contre les autres dans la mer ; chauffées, elles s’écartent et s’effacent, c’est la vapeur ; dans le froid, elles se rapprochent en petites gouttelettes, c’est le nuage ; collées en une grosse goutte, c’est la pluie. Cette vue suit la goutte de la scène, elle ne se manipule pas."></canvas>
