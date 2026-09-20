@@ -16,9 +16,9 @@ L'idée centrale, celle que l'enfant doit retenir :
 |---|---|
 | ![L'épisode pendant la montée](docs/desktop-montee.png) | ![L'épisode pendant la pluie](docs/desktop-pluie.png) |
 
-C'est le premier épisode de la série météorologie : son thème graphique (le
-ciel d'un jour de pluie, l'accent bleu de la goutte, l'or de la famille pour la
-chaleur du Soleil) est celui de la série.
+Son thème graphique (le ciel d'un jour de pluie, l'accent bleu de la goutte,
+l'or de la famille pour la chaleur du Soleil) est celui de la série
+météorologie, née avec lui.
 
 ## Fonctionnalités
 
@@ -142,7 +142,7 @@ docs/                captures d'écran du README + og.png
 
 Petit labo de météorologie ⛅ — <https://petit-labo.fr/> :
 
-- **D'où viennent les nuages ?** (cet épisode, le premier de la série)
+- **D'où viennent les nuages ?** (cet épisode)
 
 Et du côté du Petit labo d'astronomie 🔭 :
 

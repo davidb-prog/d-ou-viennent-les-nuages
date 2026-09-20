@@ -1,6 +1,6 @@
 # CLAUDE.md — D'où viennent les nuages ?
 
-**Petit labo de météorologie** (le premier épisode de la série). Site statique
+**Petit labo de météorologie** (la série est née avec cet épisode). Site statique
 d'une page, en français, qui explique d'où viennent les nuages à un enfant
 d'environ 5 ans. Le parent lit à voix haute ; l'enfant attrape une goutte
 d'eau et la promène dans son grand voyage (mer → vapeur → nuage → pluie →
