@@ -10,7 +10,7 @@
  * groupe. Cette vue ne se manipule pas : elle suit l'état de la scène.
  */
 import {
-  TAU, pNormalise, etape, avancementEtape, forme, ecartement, regroupement, agitation,
+  TAU, pNormalise, etape, avancementEtape, forme, visibilite, ecartement, regroupement, agitation,
   altitude, faitFroid, soleilChauffe, chargeNuage, forcePluie, grosseGoutte
 } from './model.js';
 import { dessinerGoutte, dessinerFantome } from './goutte.js';
@@ -106,8 +106,16 @@ function dessinerRepere(ctx, W, H, cx, cy, R, p, horloge) {
     ctx.restore();
   }
 
-  /* le Soleil qui chauffe : un quart de soleil dans le coin, comme sur la scène */
-  if (soleilChauffe(p)) {
+  /* Les deux repères de température ne s'affichent JAMAIS ensemble : le
+   * Soleil tant que la bande chauffe et n'a pas atteint le froid ; les
+   * flocons quand il fait froid ET que les copines commencent à
+   * réapparaître — le froid se voit par son effet, pas cinq points avant
+   * (retour utilisateur : « les flocons apparaissent trop tôt »). */
+  var chaud = soleilChauffe(p) && !faitFroid(p);
+  var froid = faitFroid(p) && visibilite(p) > 0;
+
+  /* le Soleil qui chauffe : dans le coin, comme sur la scène */
+  if (chaud) {
     var sx = W * 0.13, sy = H * 0.13, sr = R * 0.2;
     ctx.save();
     var halo = ctx.createRadialGradient(sx, sy, sr * 0.8, sx, sy, sr * 2.4);
@@ -131,7 +139,7 @@ function dessinerRepere(ctx, W, H, cx, cy, R, p, horloge) {
   }
 
   /* le froid : trois flocons dans les coins, comme là-haut sur la scène */
-  if (faitFroid(p)) {
+  if (froid) {
     [[0.1, 0.12, 0.11], [0.88, 0.1, 0.09], [0.9, 0.5, 0.075]].forEach(function (pos) {
       dessinerFlocon(ctx, pos[0] * W, pos[1] * H, R * pos[2], 0.8);
     });
