@@ -11,7 +11,7 @@ import {
   positionGoutte, altitude, temperature, TEMPERATURE_FROID, faitFroid, soleilChauffe, Y_FROID,
   FONDU, forme, visibilite, goutteToujoursLa,
   chargeNuage, positionNuage, ilPleut, forcePluie, debitRiviere,
-  ecartement, regroupement, agitation,
+  ecartement, regroupement, agitation, grosseGoutte, NUAGE_FUSION,
   typographie, phraseDehors, phraseCopines,
   LECTURE_TOUR_SEC, LECTURE_P_PAR_SEC, SCENARIOS, VOIX_TRANSITIONS,
   DEFI_ATTENTE_MS, DEFI_SORTIE_MARGE, DEFIS, dansFenetre, defiReussi, defiEncoreProche, deltaCourt,
@@ -271,6 +271,32 @@ test('les copines sont serrées dans l’eau, éparpillées dans la vapeur, en p
     assert.ok(agitation(p) > 0 && agitation(p) <= 1);
   }
   assert.ok(agitation(0.05) > agitation(0.46), 'les copines chaudes gigotent plus que les froides');
+});
+
+test('la grosse goutte se forme à la fin du nuage, AVANT de tomber : il ne pleut jamais pendant que les copines se collent', function () {
+  /* dans le nuage : d'abord des petits groupes, puis tout se colle */
+  assert.equal(grosseGoutte(0.46), 0);
+  assert.equal(regroupement(0.46), 1);
+  var pFusion = P_MONTEE_FIN + NUAGE_FUSION * (P_NUAGE_FIN - P_MONTEE_FIN);
+  assert.ok(grosseGoutte(pFusion + 0.001) > 0, 'la fusion commence après NUAGE_FUSION');
+  presque(grosseGoutte(P_NUAGE_FIN - 1e-6), 1, 1e-3);
+  presque(regroupement(P_NUAGE_FIN - 1e-6), 0, 1e-3);
+  /* dès qu'il pleut, la goutte est entière et le reste */
+  for (var p = 0; p < 1; p += PAS) {
+    if (ilPleut(p)) {
+      assert.equal(grosseGoutte(p), 1, 'il pleut sans grosse goutte à p = ' + p.toFixed(4));
+      assert.equal(regroupement(p), 0);
+    }
+    if (grosseGoutte(p) > 0) assert.ok(etape(p) === 'nuage' || etape(p) === 'pluie');
+  }
+  /* la grosse goutte grandit sans à-coup, et l'écartement ne saute pas à la frontière nuage → pluie */
+  var precedent = grosseGoutte(0);
+  for (var q = PAS; q < 1; q += PAS) {
+    var g = grosseGoutte(q);
+    assert.ok(g >= precedent - 1e-9 || etape(q) === 'riviere', 'la grosse goutte se défait à p = ' + q.toFixed(4));
+    precedent = g;
+    assert.ok(Math.abs(ecartement(q) - ecartement(q - PAS)) < 0.05, 'écartement qui saute à p = ' + q.toFixed(4));
+  }
 });
 
 /* ------------------------------------------------------------------ */

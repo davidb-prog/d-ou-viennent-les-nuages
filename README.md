@@ -135,6 +135,7 @@ js/model.js          modèle pur : la boucle du voyage, le paysage, les étapes,
                      la visibilité, le nuage, la bande des copines, les textes
 js/vue-dehors.js     le paysage et la goutte (geste-signature)
 js/goutte.js         le dessin de la goutte, partagé par les deux vues
+js/pictos.js         les pictogrammes partagés (le flocon)
 js/vue-copines.js    la goutte et sa bande (+ dessinerMiniCopines, médaillon)
 js/main.js           câblage : boucle rAF, lecture auto, curseur, geste,
                      scénarios, jeu, conteur, médaillon

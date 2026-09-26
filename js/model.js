@@ -277,23 +277,62 @@ export function debitRiviere(p) {
 /* La goutte et ses copines : la bande vue de la seconde vue            */
 /* ------------------------------------------------------------------ */
 
-/* L'écartement des copines, de 0 (serrées : de l'eau qu'on voit) à 1
- * (éparpillées : de la vapeur, invisible). Il suit la visibilité en
- * montant, et redescend d'un cran dans le nuage. */
+/* L'écartement des copines, de 0 (collées : la grosse goutte) à 1
+ * (éparpillées : de la vapeur, invisible), en passant par 0,18 (serrées :
+ * l'eau qu'on voit) et 0,55 (en petits groupes : le nuage). CONTINU sur
+ * toute la boucle (test) : il suit la visibilité en montant, redescend
+ * d'un cran dans le froid, se resserre à la fusion, se relâche un peu
+ * en fin de pluie pour retrouver l'eau de la rivière. */
+export var ECART_EAU = 0.18;
+export var ECART_NUAGE = 0.55;
+export var ECART_COLLEES = 0.05;
 export function ecartement(p) {
-  var e = etape(p);
-  if (e === 'montee') return 1 - visibilite(p);
-  if (e === 'nuage') return 0.55 - 0.15 * adoucir(Math.min(1, avancementEtape(p) * 2));
-  if (e === 'pluie') return 0.05;
-  return 0.18;
+  var q = pNormalise(p);
+  var e = etape(q);
+  var s = avancementEtape(q);
+  if (e === 'montee') {
+    var vapeur = 1 - visibilite(q);
+    /* on part de l'eau serrée ; on réapparaît déjà en groupes, dans le froid */
+    if (q < P_MONTEE_FIN - FONDU) return ECART_EAU + (1 - ECART_EAU) * vapeur;
+    return ECART_NUAGE + (1 - ECART_NUAGE) * vapeur;
+  }
+  if (e === 'nuage') {
+    var groupes = ECART_NUAGE - 0.15 * adoucir(Math.min(1, s * 2));
+    /* la fin du nuage : les groupes se collent en une seule grosse goutte */
+    if (s > NUAGE_FUSION) return groupes + (ECART_COLLEES - groupes) * adoucir((s - NUAGE_FUSION) / (1 - NUAGE_FUSION));
+    return groupes;
+  }
+  /* collées en tombant ; la seconde moitié de la pluie relâche un peu,
+   * pour retrouver sans à-coup l'eau serrée de la rivière */
+  if (e === 'pluie') return ECART_COLLEES + (ECART_EAU - ECART_COLLEES) * adoucir(Math.max(0, (s - 0.5) / 0.5));
+  return ECART_EAU;
 }
+
+/* À partir de cet avancement dans l'étape « nuage », les petits groupes se
+ * collent en une seule grosse goutte : elle est FORMÉE avant de tomber —
+ * l'ordre du récit est « elles se collent, trop lourde, elle tombe »,
+ * jamais « il pleut pendant qu'elles se collent ». */
+export var NUAGE_FUSION = 0.7;
 
 /* Le regroupement de la bande en petits groupes (les gouttelettes du
  * nuage) : 0 = un seul paquet, 1 = trois petits groupes bien séparés. */
 export function regroupement(p) {
   var e = etape(p);
-  if (e === 'nuage') return adoucir(Math.min(1, avancementEtape(p) * 3));
-  if (e === 'pluie') return 1 - adoucir(Math.min(1, avancementEtape(p) * 2.5));
+  var s = avancementEtape(p);
+  if (e === 'nuage') {
+    if (s > NUAGE_FUSION) return 1 - adoucir((s - NUAGE_FUSION) / (1 - NUAGE_FUSION));
+    return adoucir(Math.min(1, s * 3));
+  }
+  return 0;
+}
+
+/* La grosse goutte est-elle formée (0 : pas encore, 1 : toute la bande
+ * collée dedans) ? Elle naît à la fin du nuage, et reste entière tant
+ * qu'il pleut. */
+export function grosseGoutte(p) {
+  var e = etape(p);
+  if (e === 'nuage') return avancementEtape(p) > NUAGE_FUSION ? 1 - regroupement(p) : 0;
+  if (e === 'pluie') return 1;
   return 0;
 }
 
@@ -344,7 +383,10 @@ export function phraseCopines(p) {
     if (s < 0.8) return 'Chauffées, les copines s’éparpillent et s’envolent, chacune de son côté. Si petites, si loin… On ne les voit plus.';
     return 'Dans le froid, les copines se rapprochent…';
   }
-  if (e === 'nuage') return 'Elles se serrent en petits groupes. Des milliards de gouttes serrées, c’est ça, un nuage !';
+  if (e === 'nuage') {
+    if (s < NUAGE_FUSION) return 'Elles se serrent en petits groupes. Des milliards de gouttes serrées, c’est ça, un nuage !';
+    return 'Elles se collent toutes ensemble… Une grosse goutte, de plus en plus lourde !';
+  }
   if (e === 'pluie') return 'Toutes collées en une grosse goutte, elles sont trop lourdes pour rester en l’air.';
   return 'Dans la rivière, les copines sont de nouveau bien serrées : de l’eau qu’on voit.';
 }

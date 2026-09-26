@@ -83,8 +83,15 @@ Vérités verrouillées par `test/model.test.mjs` (à compléter, jamais supprim
   gouttelette / goutte.
 - **La seconde vue, « Avec ses copines »**, montre la même goutte avec sa
   bande (sept personnages, à sa taille) et lit trois lois pures :
-  `ecartement` (serrées ↔ éparpillées), `regroupement` (un paquet ↔ trois
-  petits groupes), `agitation` (suit la température). Décision d'octobre
+  `ecartement` (collées 0,05 ↔ eau serrée 0,18 ↔ groupes 0,55 ↔ vapeur 1,
+  continu sur toute la boucle, test), `regroupement` (un paquet ↔ trois
+  petits groupes), `agitation` (suit la température). **La grosse goutte se
+  forme à la fin du nuage, AVANT de tomber** (`NUAGE_FUSION 0,7`,
+  `grosseGoutte`, test) : l'ordre du récit est « elles se collent, trop
+  lourde, elle tombe », jamais « il pleut pendant qu'elles se collent ».
+  Les repères du froid sont de vrais flocons à six branches
+  (`js/pictos.js`) : trois traits croisés se lisaient « étoiles », donc
+  « la nuit ». Décision d'octobre
   2026 : c'était une loupe à douze « billes d'eau » — retirée, un enfant de
   5 ans n'a ni le modèle particulaire de la matière (il se construit vers
   8-12 ans) ni le mot « loupe » ; le changement d'échelle ne se relie pas à
@@ -152,9 +159,10 @@ css/style.css     le thème météo ; seuil mobile unique 880 px ; plafond de la
 js/model.js       le modèle pur
 js/vue-dehors.js  creerVueDehors(canvas) → { rendre(p, halo, horloge), attrapeGoutte, pDepuisPointeur }
 js/goutte.js      dessinerGoutte / dessinerFantome : la goutte, partagée par les deux vues
+js/pictos.js      dessinerFlocon : les pictogrammes partagés
 js/vue-copines.js creerVueCopines(canvas) → { rendre(p, horloge) } ; dessinerMiniCopines(ctx, w, h, p)
 js/main.js        le câblage (copié-adapté de la-terre-est-penchee : conteur, jeu, médaillon)
-test/             model.test.mjs (31 tests), voix.test.mjs
+test/             model.test.mjs (32 tests), voix.test.mjs
 tools/            voix-lib.mjs (corpus : scn-*-intro/-dehors/-copines, transition-copines,
                   defi-*-consigne/-bravo, histoire-N), build-voix.mjs, controle-voix.mjs
 assets/           fonts/ (Baloo 2), audio/manifest.json (vide : synthèse seule)

@@ -10,6 +10,7 @@ import {
   soleilChauffe, chargeNuage, positionNuage, forcePluie, debitRiviere
 } from './model.js';
 import { dessinerGoutte, dessinerFantome } from './goutte.js';
+import { dessinerFlocon } from './pictos.js';
 
 var CIEL_HAUT = '#1c3a6e';
 var CIEL_BAS = '#6aa6dd';
@@ -70,22 +71,6 @@ function dessinerNuage(ctx, cx, cy, largeur, charge, alpha) {
   ctx.restore();
 }
 
-function dessinerFlocon(ctx, x, y, r, alpha) {
-  ctx.save();
-  ctx.globalAlpha = alpha;
-  ctx.strokeStyle = '#e9f4ff';
-  ctx.lineWidth = Math.max(1, r * 0.22);
-  ctx.lineCap = 'round';
-  ctx.beginPath();
-  for (var k = 0; k < 3; k++) {
-    var a = (k / 3) * Math.PI;
-    ctx.moveTo(x - Math.cos(a) * r, y - Math.sin(a) * r);
-    ctx.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r);
-  }
-  ctx.stroke();
-  ctx.restore();
-}
-
 export function creerVueDehors(canvas) {
   var ctx = canvas.getContext('2d');
 
@@ -125,7 +110,7 @@ export function creerVueDehors(canvas) {
     for (var k = 0; k < nFlocons; k++) {
       var fx = (0.36 + 0.62 * ALEAS[k * 3]) * g.W;
       var fy = ALEAS[k * 3 + 1] * yFroid * 0.9 + yFroid * 0.05;
-      dessinerFlocon(ctx, fx, fy, Math.max(4, g.W * (0.008 + 0.006 * ALEAS[k * 3 + 2])), 0.5);
+      dessinerFlocon(ctx, fx, fy, Math.max(6, g.W * (0.013 + 0.007 * ALEAS[k * 3 + 2])), 0.55);
     }
   }
 

@@ -10,10 +10,11 @@
  * groupe. Cette vue ne se manipule pas : elle suit l'état de la scène.
  */
 import {
-  TAU, pNormalise, etape, forme, ecartement, regroupement, agitation,
-  altitude, faitFroid, soleilChauffe, chargeNuage, forcePluie
+  TAU, pNormalise, etape, avancementEtape, forme, ecartement, regroupement, agitation,
+  altitude, faitFroid, soleilChauffe, chargeNuage, forcePluie, grosseGoutte
 } from './model.js';
 import { dessinerGoutte, dessinerFantome } from './goutte.js';
+import { dessinerFlocon } from './pictos.js';
 
 var FOND = '#171f36';
 
@@ -70,9 +71,14 @@ function positionsBande(p, horloge) {
 function dessinerRepere(ctx, W, H, cx, cy, R, p, horloge) {
   var t = horloge ? horloge / 1400 : 0;
 
-  /* l'eau : la bande y flotte dans la mer et la rivière ; elle descend et
-   * disparaît quand les copines s'envolent (continu avec l'altitude) */
-  var niveau = Math.max(0, Math.min(1, 1 - altitude(p) * 5));
+  /* l'eau : la bande y flotte dans la mer et la rivière (toute la rivière,
+   * même sur le flanc de la montagne) ; elle descend et disparaît quand les
+   * copines s'envolent, et remonte pendant qu'il pleut — continu partout */
+  var e = etape(p);
+  var niveau = 1;
+  if (e === 'montee') niveau = Math.max(0, Math.min(1, 1 - altitude(p) * 5));
+  else if (e === 'nuage') niveau = 0;
+  else if (e === 'pluie') niveau = avancementEtape(p);
   if (niveau > 0.01) {
     /* la ligne d'eau passe au milieu de la bande : elles flottent DEDANS,
      * la tête dehors */
@@ -125,27 +131,16 @@ function dessinerRepere(ctx, W, H, cx, cy, R, p, horloge) {
 
   /* le froid : trois flocons dans les coins, comme là-haut sur la scène */
   if (faitFroid(p)) {
-    ctx.save();
-    ctx.strokeStyle = 'rgba(233, 244, 255, 0.75)';
-    ctx.lineWidth = Math.max(1.2, R * 0.025);
-    ctx.lineCap = 'round';
-    [[0.1, 0.12], [0.88, 0.1], [0.9, 0.5]].forEach(function (pos) {
-      var fx = pos[0] * W, fy = pos[1] * H, r = R * 0.08;
-      ctx.beginPath();
-      for (var q = 0; q < 3; q++) {
-        var an = (q / 3) * Math.PI;
-        ctx.moveTo(fx - Math.cos(an) * r, fy - Math.sin(an) * r);
-        ctx.lineTo(fx + Math.cos(an) * r, fy + Math.sin(an) * r);
-      }
-      ctx.stroke();
+    [[0.1, 0.12, 0.11], [0.88, 0.1, 0.09], [0.9, 0.5, 0.075]].forEach(function (pos) {
+      dessinerFlocon(ctx, pos[0] * W, pos[1] * H, R * pos[2], 0.8);
     });
-    ctx.restore();
   }
 
   /* le nuage : la bande serrée en fait un — il naît dans le froid quand
    * les copines se regroupent, blanchit puis grisonne en se chargeant */
   var charge = chargeNuage(p);
-  var alphaNuage = charge * (etape(p) === 'nuage' ? regroupement(p) : 1);
+  /* (pas de reste de nuage dans la rivière : ici on ne voit que la bande) */
+  var alphaNuage = e === 'nuage' ? charge * regroupement(p) : (e === 'pluie' ? charge : 0);
   if (alphaNuage > 0.02) {
     var tn = Math.min(1, charge);
     var r = Math.round(233 + (150 - 233) * tn), g = Math.round(237 + (160 - 237) * tn), b = Math.round(248 + (186 - 248) * tn);
@@ -191,15 +186,18 @@ function dessinerBande(ctx, W, H, p, horloge, compact) {
   var R = Math.min(W, H) * 0.42;
   var f = forme(p);
   var ec = ecartement(p);
+  var grosse = grosseGoutte(p);
 
   ctx.fillStyle = FOND;
   ctx.fillRect(0, 0, W, H);
   dessinerRepere(ctx, W, H, cx, cy, R, p, horloge);
 
-  /* la grosse goutte de pluie : la bande collée dedans, trop lourde */
-  if (f === 'goutte') {
+  /* la grosse goutte : la bande collée dedans — elle se dessine à mesure
+   * que les groupes se collent, à la fin du nuage, et tombe entière */
+  if (grosse > 0.02) {
     var sg = R * 0.62;
     ctx.save();
+    ctx.globalAlpha = grosse;
     ctx.translate(cx, cy + R * 0.1);
     ctx.beginPath();
     ctx.moveTo(0, -1.9 * sg);
@@ -221,7 +219,7 @@ function dessinerBande(ctx, W, H, p, horloge, compact) {
   var echelle = R * 0.72;
   positions.forEach(function (b) {
     var heroine = b.i === 0;
-    var s = R * (heroine ? 0.18 : 0.15) * (f === 'goutte' ? 0.9 : 1) * (compact ? 1.08 : 1);
+    var s = R * (heroine ? 0.18 : 0.15) * (1 - 0.1 * grosse) * (compact ? 1.08 : 1);
     var x = cx + b.x * echelle, y = cy + b.y * echelle;
     if (ec > 0.5) {
       /* de la vapeur : chacune pâlit jusqu'au pointillé — on ne la voit
