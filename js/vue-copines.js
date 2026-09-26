@@ -80,9 +80,10 @@ function dessinerRepere(ctx, W, H, cx, cy, R, p, horloge) {
   else if (e === 'nuage') niveau = 0;
   else if (e === 'pluie') niveau = avancementEtape(p);
   if (niveau > 0.01) {
-    /* la ligne d'eau passe au milieu de la bande : elles flottent DEDANS,
-     * la tête dehors */
-    var yEau = (cy - R * 0.12) + (1 - niveau) * (H + R * 0.2 - (cy - R * 0.12));
+    /* la ligne d'eau passe AU-DESSUS des pointes : la bande est dans
+     * l'eau, comme la goutte sous la surface de la mer sur la scène */
+    var haut = cy - R * 0.72;
+    var yEau = haut + (1 - niveau) * (H + R * 0.2 - haut);
     var mer = ctx.createLinearGradient(0, yEau, 0, H);
     mer.addColorStop(0, '#3a8fcc');
     mer.addColorStop(1, '#1d4f7d');
@@ -94,7 +95,7 @@ function dessinerRepere(ctx, W, H, cx, cy, R, p, horloge) {
     ctx.lineCap = 'round';
     for (var k = 0; k < 5; k++) {
       var vx = W * (0.1 + 0.2 * k) + R * 0.03 * Math.sin(t + k);
-      var vy = yEau + R * (0.08 + 0.5 * ((k * 0.61) % 1));
+      var vy = yEau + R * (0.06 + 0.16 * ((k * 0.61) % 1));
       var l = R * 0.09;
       ctx.beginPath();
       ctx.moveTo(vx - l, vy);
