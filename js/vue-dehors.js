@@ -6,16 +6,13 @@
  */
 import {
   TAU, SOLEIL, NIVEAU_SOL, MER_DROITE, MONTAGNE, Y_FROID, hauteurMontagne,
-  pNormalise, etape, avancementEtape, positionGoutte, visibilite, forme,
-  soleilChauffe, chargeNuage, positionNuage, ilPleut, forcePluie, debitRiviere
+  pNormalise, etape, positionGoutte, visibilite, forme,
+  soleilChauffe, chargeNuage, positionNuage, forcePluie, debitRiviere
 } from './model.js';
+import { dessinerGoutte, dessinerFantome } from './goutte.js';
 
 var CIEL_HAUT = '#1c3a6e';
 var CIEL_BAS = '#6aa6dd';
-var GOUTTE = '#7cc4ff';
-var GOUTTE_CLAIR = '#d6f0ff';
-var GOUTTE_SOMBRE = '#2f7fb8';
-var ENCRE = '#0b1020';
 
 /* Le chemin, échantillonné une fois pour toutes (600 points sur la boucle) :
  * sert au tracé en pointillés et à la recherche du point le plus proche du
@@ -70,75 +67,6 @@ function dessinerNuage(ctx, cx, cy, largeur, charge, alpha) {
   ctx.beginPath();
   ctx.ellipse(cx, cy + 0.2 * largeur, largeur * 0.62, largeur * 0.13, 0, 0, TAU);
   ctx.fill();
-  ctx.restore();
-}
-
-/* La goutte-héroïne : une larme ronde avec un visage. Coordonnées locales,
- * la pointe en haut, le rond en bas ; `s` est le rayon du rond. */
-function dessinerGoutte(ctx, x, y, s, alpha, forme_) {
-  if (alpha <= 0.005) return;
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.globalAlpha = alpha;
-  ctx.beginPath();
-  ctx.moveTo(0, -1.9 * s);
-  ctx.bezierCurveTo(0.15 * s, -1.3 * s, s, -0.7 * s, s, 0.15 * s);
-  ctx.arc(0, 0.15 * s, s, 0, Math.PI, false);
-  ctx.bezierCurveTo(-s, -0.7 * s, -0.15 * s, -1.3 * s, 0, -1.9 * s);
-  ctx.closePath();
-  var degrade = ctx.createRadialGradient(-0.3 * s, -0.1 * s, s * 0.1, 0, 0.1 * s, 1.4 * s);
-  degrade.addColorStop(0, GOUTTE_CLAIR);
-  degrade.addColorStop(0.45, GOUTTE);
-  degrade.addColorStop(1, GOUTTE_SOMBRE);
-  ctx.fillStyle = degrade;
-  ctx.fill();
-  ctx.lineWidth = Math.max(1.5, s * 0.16);
-  ctx.strokeStyle = '#ffffff';
-  ctx.stroke();
-  /* le visage : deux yeux, un sourire (une gouttelette de nuage a le même
-   * visage en plus petit — c'est toujours elle) */
-  ctx.fillStyle = ENCRE;
-  ctx.beginPath();
-  ctx.arc(-0.34 * s, 0.05 * s, s * 0.13, 0, TAU);
-  ctx.arc(0.34 * s, 0.05 * s, s * 0.13, 0, TAU);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.lineWidth = Math.max(1.2, s * 0.11);
-  ctx.strokeStyle = ENCRE;
-  ctx.lineCap = 'round';
-  if (forme_ === 'goutte') {
-    /* la bouche ronde de la chute : « ooooh ! » */
-    ctx.arc(0, 0.5 * s, s * 0.16, 0, TAU);
-  } else {
-    ctx.arc(0, 0.32 * s, s * 0.34, 0.15 * Math.PI, 0.85 * Math.PI);
-  }
-  ctx.stroke();
-  /* le reflet */
-  ctx.fillStyle = 'rgba(255,255,255,0.75)';
-  ctx.beginPath();
-  ctx.ellipse(-0.45 * s, -0.55 * s, s * 0.14, s * 0.26, -0.5, 0, TAU);
-  ctx.fill();
-  ctx.restore();
-}
-
-/* Le fantôme de la goutte quand elle est de la vapeur : un pointillé à sa
- * place — on ne la voit plus, mais elle est là (c'est aussi ce que le
- * doigt attrape). */
-function dessinerFantome(ctx, x, y, s, alpha) {
-  if (alpha <= 0.02) return;
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.globalAlpha = alpha;
-  ctx.setLineDash([Math.max(2, s * 0.35), Math.max(2, s * 0.3)]);
-  ctx.lineWidth = Math.max(1.5, s * 0.14);
-  ctx.strokeStyle = GOUTTE_CLAIR;
-  ctx.beginPath();
-  ctx.moveTo(0, -1.9 * s);
-  ctx.bezierCurveTo(0.15 * s, -1.3 * s, s, -0.7 * s, s, 0.15 * s);
-  ctx.arc(0, 0.15 * s, s, 0, Math.PI, false);
-  ctx.bezierCurveTo(-s, -0.7 * s, -0.15 * s, -1.3 * s, 0, -1.9 * s);
-  ctx.closePath();
-  ctx.stroke();
   ctx.restore();
 }
 

@@ -14,7 +14,11 @@
  * - le PAYSAGE est l'objet-repère de l'épisode : la mer à gauche, la
  *   montagne à droite, le Soleil en haut à gauche au-dessus de la mer qu'il
  *   chauffe. Rien de tout ça ne bouge jamais à l'écran ;
- * - la goutte avance dans le sens du voyage quand p augmente.
+ * - la goutte avance dans le sens du voyage quand p augmente ;
+ * - la seconde vue, « Avec ses copines », montre la même goutte avec sa
+ *   bande, à la même taille : pas de loupe, pas de billes — un enfant de
+ *   5 ans n'a pas le modèle « la matière est faite de petits morceaux »,
+ *   il a celui du groupe qui se serre ou s'éparpille.
  */
 
 export var TAU = Math.PI * 2;
@@ -270,12 +274,12 @@ export function debitRiviere(p) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Ce qu'on voit à la loupe : les billes d'eau                          */
+/* La goutte et ses copines : la bande vue de la seconde vue            */
 /* ------------------------------------------------------------------ */
 
-/* L'écartement des billes d'eau, de 0 (serrées : de l'eau qu'on voit) à 1
- * (éparses : de la vapeur, invisible). Il suit la visibilité en montant,
- * et redescend d'un cran dans le nuage. */
+/* L'écartement des copines, de 0 (serrées : de l'eau qu'on voit) à 1
+ * (éparpillées : de la vapeur, invisible). Il suit la visibilité en
+ * montant, et redescend d'un cran dans le nuage. */
 export function ecartement(p) {
   var e = etape(p);
   if (e === 'montee') return 1 - visibilite(p);
@@ -284,8 +288,8 @@ export function ecartement(p) {
   return 0.18;
 }
 
-/* Le regroupement des billes en petits amas (les gouttelettes du nuage) :
- * 0 = un seul bloc, 1 = trois gouttelettes bien séparées. */
+/* Le regroupement de la bande en petits groupes (les gouttelettes du
+ * nuage) : 0 = un seul paquet, 1 = trois petits groupes bien séparés. */
 export function regroupement(p) {
   var e = etape(p);
   if (e === 'nuage') return adoucir(Math.min(1, avancementEtape(p) * 3));
@@ -293,8 +297,8 @@ export function regroupement(p) {
   return 0;
 }
 
-/* L'agitation des billes : les billes chaudes bougent, les froides sont
- * plus calmes. Suit la température de l'air. */
+/* L'agitation de la bande : les copines chaudes gigotent, les froides
+ * sont plus calmes. Suit la température de l'air. */
 export function agitation(p) {
   return 0.3 + 0.7 * temperature(altitude(p));
 }
@@ -331,18 +335,18 @@ export function phraseDehors(p) {
   return 'Et voilà la mer ! Le Soleil chauffe l’eau… Ça recommence !';
 }
 
-/* La phrase sous la loupe : ce que devient l'eau, de tout près. */
-export function phraseLoupe(p) {
+/* La phrase sous « Avec ses copines » : ce que fait la bande. */
+export function phraseCopines(p) {
   var e = etape(p);
   var s = avancementEtape(p);
-  if (e === 'mer') return 'Dans la mer, les billes d’eau sont serrées les unes contre les autres.';
+  if (e === 'mer') return 'Dans la mer, la goutte est serrée contre ses copines. On les voit bien !';
   if (e === 'montee') {
-    if (s < 0.8) return 'Chauffées, les billes s’écartent et s’envolent. Trop petites, trop loin les unes des autres : on ne les voit plus.';
-    return 'Dans le froid, les billes se rapprochent…';
+    if (s < 0.8) return 'Chauffées, les copines s’éparpillent et s’envolent, chacune de son côté. Si petites, si loin… On ne les voit plus.';
+    return 'Dans le froid, les copines se rapprochent…';
   }
-  if (e === 'nuage') return 'Elles se collent en petites gouttelettes. Un nuage, c’est des milliards de gouttelettes !';
-  if (e === 'pluie') return 'Les gouttelettes se collent en une grosse goutte, trop lourde pour rester en l’air.';
-  return 'Dans la rivière, les billes sont de nouveau serrées : de l’eau qu’on voit.';
+  if (e === 'nuage') return 'Elles se serrent en petits groupes. Des milliards de gouttes serrées, c’est ça, un nuage !';
+  if (e === 'pluie') return 'Toutes collées en une grosse goutte, elles sont trop lourdes pour rester en l’air.';
+  return 'Dans la rivière, les copines sont de nouveau bien serrées : de l’eau qu’on voit.';
 }
 
 /* ------------------------------------------------------------------ */
@@ -367,7 +371,7 @@ export var SCENARIOS = [
     sub: 'la goutte s’envole',
     intro: 'Le matin, le Soleil chauffe la mer…',
     dehors: 'Regarde bien la goutte : il fait chaud, elle s’envole, et elle disparaît ! On ne la voit plus du tout. Mais elle est toujours là, elle monte dans le ciel.',
-    loupe: 'Chauffées par le Soleil, les billes d’eau s’écartent les unes des autres et s’envolent. Elles sont si petites et si loin les unes des autres qu’on ne peut plus les voir. C’est de la vapeur !'
+    copines: 'Chauffées par le Soleil, la goutte et ses copines s’éparpillent et s’envolent, chacune de son côté. Elles sont si petites et si loin les unes des autres qu’on ne peut plus les voir. C’est de la vapeur !'
   },
   {
     id: 'nuage',
@@ -378,7 +382,7 @@ export var SCENARIOS = [
     sub: 'en haut, il fait froid',
     intro: 'Tout en haut du ciel, il fait froid…',
     dehors: 'Dans le froid, la goutte réapparaît ! Elle retrouve des milliers de copines, et toutes ensemble, elles font un nuage. Le nuage grossit, et il glisse vers la montagne.',
-    loupe: 'Dans le froid, les billes d’eau se rapprochent et se collent en petites gouttelettes. Un nuage, c’est des milliards de gouttelettes, tellement serrées qu’on les voit de loin : tout blanc, ou tout gris !'
+    copines: 'Dans le froid, les copines se rapprochent et se serrent en petits groupes. Des milliards de gouttes serrées, tellement serrées qu’on les voit de loin : tout blanc, ou tout gris ! C’est un nuage.'
   },
   {
     id: 'pluie',
@@ -389,7 +393,7 @@ export var SCENARIOS = [
     sub: 'le nuage est trop lourd',
     intro: 'Le nuage est plein, plein, plein…',
     dehors: 'Il est devenu trop lourd ! Les gouttes tombent : il pleut sur la montagne. Notre goutte tombe avec les autres, et elle atterrit sur le flanc de la montagne.',
-    loupe: 'Les gouttelettes se collent encore et encore, jusqu’à faire une grosse goutte. Trop lourde pour rester en l’air… Elle tombe !'
+    copines: 'Les copines se collent encore et encore, jusqu’à faire une grosse goutte. Trop lourde pour rester en l’air… Elle tombe !'
   },
   {
     id: 'retour',
@@ -400,12 +404,12 @@ export var SCENARIOS = [
     sub: 'et ça recommence',
     intro: 'La pluie coule, coule…',
     dehors: 'La rivière emporte la goutte, depuis la montagne jusqu’à la mer. La voilà revenue ! Et le Soleil se remet à chauffer l’eau… Le grand voyage recommence !',
-    loupe: 'Dans la rivière, les billes d’eau sont de nouveau serrées les unes contre les autres : c’est de l’eau qu’on voit, qu’on peut toucher. La même eau qu’au début !'
+    copines: 'Dans la rivière, la goutte a retrouvé ses copines, bien serrées les unes contre les autres : c’est de l’eau qu’on voit, qu’on peut toucher. La même eau qu’au début !'
   }
 ];
 
 export var VOIX_TRANSITIONS = {
-  loupe: 'Et maintenant, à la loupe…'
+  copines: 'Et ses copines, pendant ce temps…'
 };
 
 /* ------------------------------------------------------------------ */

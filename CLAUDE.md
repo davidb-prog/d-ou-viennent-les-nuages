@@ -24,7 +24,7 @@ l'épisode et à la série.
   `top/right/bottom/left` plutôt qu'`inset`. Tester à 390 px de large.
 - **Blindage tactile** : `touch-action: none` sur la vue « dehors » (celle qu'on
   manipule) et sa jumelle du jeu, doublé du repli JS `touchstart`/`touchmove`
-  non passifs ; la loupe laisse défiler la page. `user-select: none` sur `body`,
+  non passifs ; la vue des copines laisse défiler la page. `user-select: none` sur `body`,
   `* { touch-action: pan-x pan-y }`, viewport `maximum-scale=1` + filet
   `gesturestart`.
 - **`js/model.js` est pur** (aucun accès DOM) : toutes les constantes du récit
@@ -32,7 +32,7 @@ l'épisode et à la série.
   scénarios, défis, phrases, textes oraux) vivent dedans. `node test/model.test.mjs`.
 - **Boucle rAF résiliente et sobre** : `requestAnimationFrame` dans un
   `try/finally` ; en pause rien ne se redessine (l'horloge des frémissements —
-  vagues, chaleur, billes — ne tourne que pendant la lecture ou le glisser).
+  vagues, chaleur, copines — ne tourne que pendant la lecture ou le glisser).
 - **`prefers-reduced-motion` respecté** : pas de lecture auto au démarrage, les
   glissements de scénario et le recalage du jeu deviennent des sauts secs, le
   halo ne respire pas, rien ne frémit.
@@ -81,9 +81,15 @@ Vérités verrouillées par `test/model.test.mjs` (à compléter, jamais supprim
   `FONDU 0,04` au départ, 0 au cœur, fondu vers 1 sur les 0,04 derniers, quand
   l'altitude a déjà dépassé le froid. La forme : liquide / vapeur /
   gouttelette / goutte.
-- **La loupe** lit trois lois pures : `ecartement` (serré ↔ épars),
-  `regroupement` (un bloc ↔ trois gouttelettes), `agitation` (suit la
-  température).
+- **La seconde vue, « Avec ses copines »**, montre la même goutte avec sa
+  bande (sept personnages, à sa taille) et lit trois lois pures :
+  `ecartement` (serrées ↔ éparpillées), `regroupement` (un paquet ↔ trois
+  petits groupes), `agitation` (suit la température). Décision d'octobre
+  2026 : c'était une loupe à douze « billes d'eau » — retirée, un enfant de
+  5 ans n'a ni le modèle particulaire de la matière (il se construit vers
+  8-12 ans) ni le mot « loupe » ; le changement d'échelle ne se relie pas à
+  la scène. Le registre du groupe (la bande qui se serre ou s'éparpille) est
+  le seul qu'il possède. Ne pas réintroduire de vue microscopique.
 - **Scénarios** : quatre moments (`soleil 0,22`, `nuage 0,46`, `pluie 0,66`,
   `retour 0,88`), glissement toujours vers l'avant. **Défis** : quatre fenêtres
   disjointes `[debut, fin[` (celle de la mer chevauche le 0), `pBravo` pour le
@@ -102,8 +108,9 @@ Vérités verrouillées par `test/model.test.mjs` (à compléter, jamais supprim
   sur son fantôme (rayon généreux : `max(3,2 × rayon, 9 % de la largeur)`).
 - **Un seul doigt tient la goutte** (`pointeurTenant`), un seul brancheur
   `brancherGesteGoutte` pour la grande vue ET la vue du jeu.
-- **Les deux vues sont synchronisées en permanence** ; la loupe ne se manipule
-  pas.
+- **Les deux vues sont synchronisées en permanence** ; la vue des copines ne se
+  manipule pas. La goutte est dessinée une seule fois (`js/goutte.js`) pour
+  les deux vues : même larme, même visage — « c'est toujours elle ».
 - **La lecture auto** (`LECTURE_TOUR_SEC 85`) ne se commande que par ⏸/▶ (ou la
   barre d'espace) ; attraper la goutte ou tirer le curseur la met en pause en
   douceur (l'histoire d'un scénario reste tant que la goutte reste dans son
@@ -112,7 +119,7 @@ Vérités verrouillées par `test/model.test.mjs` (à compléter, jamais supprim
   l'état courant réussit déjà, jamais deux fois le même d'affilée
   (`dernierDefiId` survit au rangement), rien ne se gagne pendant une animation
   ni sur le point d'arrivée d'un scénario (`pFabrique`).
-- **Sur mobile**, le médaillon flottant montre la loupe quand elle est hors
+- **Sur mobile**, le médaillon flottant montre les copines quand leur vue est hors
   écran, s'ancre dans l'en-tête du jeu pendant le jeu ; le jeu n'a qu'une vue.
   La bulle « attrape-moi » y est éphémère (8 s ou le premier geste) ; sur
   ordinateur elle reste.
@@ -133,8 +140,8 @@ Vérités verrouillées par `test/model.test.mjs` (à compléter, jamais supprim
 Emoji de série ⛅ (texte courant, pied de page) ; fiole de série : le nuage
 d'orage et son éclair DEDANS. Signature de l'épisode : ☁️ (favicon, bio du
 compte). Les fonctions de couleur des titres sont celles de la famille : teal
-pour « Dehors » (la vue qu'on manipule, et le jeu), violet pour « De tout
-près » (la seconde vue), or pour ce qui explique.
+pour « Dehors » (la vue qu'on manipule, et le jeu), violet pour « Avec ses
+copines » (la seconde vue), or pour ce qui explique.
 
 ## Structure
 
@@ -144,10 +151,11 @@ css/style.css     le thème météo ; seuil mobile unique 880 px ; plafond de la
                   mesuré : scène = 295 px + 0,444 × largeur utile
 js/model.js       le modèle pur
 js/vue-dehors.js  creerVueDehors(canvas) → { rendre(p, halo, horloge), attrapeGoutte, pDepuisPointeur }
-js/vue-loupe.js   creerVueLoupe(canvas) → { rendre(p, horloge) } ; dessinerMiniLoupe(ctx, w, h, p)
+js/goutte.js      dessinerGoutte / dessinerFantome : la goutte, partagée par les deux vues
+js/vue-copines.js creerVueCopines(canvas) → { rendre(p, horloge) } ; dessinerMiniCopines(ctx, w, h, p)
 js/main.js        le câblage (copié-adapté de la-terre-est-penchee : conteur, jeu, médaillon)
 test/             model.test.mjs (31 tests), voix.test.mjs
-tools/            voix-lib.mjs (corpus : scn-*-intro/-dehors/-loupe, transition-loupe,
+tools/            voix-lib.mjs (corpus : scn-*-intro/-dehors/-copines, transition-copines,
                   defi-*-consigne/-bravo, histoire-N), build-voix.mjs, controle-voix.mjs
 assets/           fonts/ (Baloo 2), audio/manifest.json (vide : synthèse seule)
 docs/             captures du README, og.png (à générer depuis le portail), voix-conteur.md

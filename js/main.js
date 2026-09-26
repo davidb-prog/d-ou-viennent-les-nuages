@@ -6,12 +6,12 @@
  * ne fait que brancher.
  */
 import {
-  pNormalise, etape, phraseDehors, phraseLoupe, typographie, texteOral,
+  pNormalise, etape, phraseDehors, phraseCopines, typographie, texteOral,
   LECTURE_P_PAR_SEC, SCENARIOS, VOIX_TRANSITIONS,
   DEFIS, DEFI_ATTENTE_MS, defiReussi, defiEncoreProche, deltaCourt
 } from './model.js';
 import { creerVueDehors } from './vue-dehors.js';
-import { creerVueLoupe, dessinerMiniLoupe } from './vue-loupe.js';
+import { creerVueCopines, dessinerMiniCopines } from './vue-copines.js';
 
 var $ = function (id) { return document.getElementById(id); };
 
@@ -52,26 +52,26 @@ var etat = {
 /* ------------------------------------------------------------------ */
 
 var canvasDehors = $('canvas-dehors');
-var canvasLoupe = $('canvas-loupe');
+var canvasCopines = $('canvas-copines');
 var canvasDehorsJeu = $('canvas-dehors-jeu');
-var canvasLoupeJeu = $('canvas-loupe-jeu');
+var canvasCopinesJeu = $('canvas-copines-jeu');
 var curseur = $('curseur-voyage');
 var phraseDehorsEl = $('phrase-dehors');
-var phraseLoupeEl = $('phrase-loupe');
+var phraseCopinesEl = $('phrase-copines');
 var bulleGeste = $('bulle-geste');
 var boutonLecture = $('bouton-lecture');
 var boutonEcouter = $('bouton-ecouter');
 var conseilVoix = $('conseil-voix');
 var texteExplication = $('texte-explication');
 var explicationPli = $('explication-pli');
-var medaillon = $('medaillon-loupe');
+var medaillon = $('medaillon-copines');
 var canvasMedaillon = $('canvas-medaillon');
 var zoneJeu = $('zone-jeu');
 
 var vueDehors = creerVueDehors(canvasDehors);
-var vueLoupe = creerVueLoupe(canvasLoupe);
+var vueCopines = creerVueCopines(canvasCopines);
 var vueDehorsJeu = creerVueDehors(canvasDehorsJeu);
-var vueLoupeJeu = creerVueLoupe(canvasLoupeJeu);
+var vueCopinesJeu = creerVueCopines(canvasCopinesJeu);
 
 /* ------------------------------------------------------------------ */
 /* Lecture automatique et reprise en main                              */
@@ -271,7 +271,7 @@ function afficherInvite() {
   histoireScn.innerHTML = '';
   var p = document.createElement('p');
   p.className = 'invite-scn';
-  p.textContent = typographie('Appuie sur un moment : la goutte glisse jusque-là, puis on raconte le même instant deux fois — dehors, et à la loupe.');
+  p.textContent = typographie('Appuie sur un moment : la goutte glisse jusque-là, puis on raconte le même instant deux fois — dehors, et avec ses copines.');
   histoireScn.appendChild(p);
 }
 
@@ -279,7 +279,7 @@ function afficherHistoire(scn) {
   histoireScn.innerHTML = '';
   var lignes = [
     { cls: 'puce-histoire-dehors', puce: '🏔️ dehors', texte: scn.dehors },
-    { cls: 'puce-histoire-loupe', puce: '🔍 à la loupe', texte: scn.loupe }
+    { cls: 'puce-histoire-copines', puce: '👭 ses copines', texte: scn.copines }
   ];
   lignes.forEach(function (ligne) {
     var rangee = document.createElement('div');
@@ -377,14 +377,14 @@ function fixerTexte(cle, el, valeur) {
 
 function rafraichirTextes() {
   fixerTexte('dehors', phraseDehorsEl, typographie(phraseDehors(etat.p)));
-  fixerTexte('loupe', phraseLoupeEl, typographie(phraseLoupe(etat.p)));
+  fixerTexte('copines', phraseCopinesEl, typographie(phraseCopines(etat.p)));
   if (!curseurTenu) curseur.value = String(Math.round(etat.p * 1000) / 10);
 }
 
 var dessine = { p: -1, halo: -1, horloge: false, tailles: '' };
 function cleTailles() {
   return canvasDehors.clientWidth + 'x' + canvasDehors.clientHeight +
-    '|' + canvasLoupe.clientWidth + 'x' + canvasLoupe.clientHeight +
+    '|' + canvasCopines.clientWidth + 'x' + canvasCopines.clientHeight +
     '|' + (zoneJeu.hidden ? 'jeu-ferme' : canvasDehorsJeu.clientWidth) +
     '|' + (medaillon.hidden ? 'sans-medaillon' : canvasMedaillon.clientWidth);
 }
@@ -406,7 +406,7 @@ function boucle(maintenant) {
      * la lecture (la vue se redessine déjà à chaque image), sage en pause. */
     var halo = etat.glisse ? 1
       : (etat.lecture && !mouvementReduit ? 0.4 + 0.35 * Math.sin(maintenant / 550) : 0.45);
-    /* L'horloge des frémissements (vagues, chaleur, billes) ne tourne que
+    /* L'horloge des frémissements (vagues, chaleur, copines) ne tourne que
      * pendant la lecture ou le glisser — en pause, la scène est figée. */
     var animer = (etat.lecture || etat.glisse || !!etat.glissement) && !mouvementReduit;
     var tailles = cleTailles();
@@ -414,17 +414,17 @@ function boucle(maintenant) {
       dessine.p = etat.p; dessine.halo = halo; dessine.horloge = animer; dessine.tailles = tailles;
       var horloge = animer ? maintenant : null;
       ajusterCanvas(canvasDehors);
-      ajusterCanvas(canvasLoupe);
+      ajusterCanvas(canvasCopines);
       vueDehors.rendre(etat.p, halo, horloge);
-      vueLoupe.rendre(etat.p, horloge);
+      vueCopines.rendre(etat.p, horloge);
       if (!zoneJeu.hidden) {
         ajusterCanvas(canvasDehorsJeu);
         vueDehorsJeu.rendre(etat.p, halo, horloge);
-        /* Sur mobile, le jeu n'a qu'une vue : la loupe est masquée par la
+        /* Sur mobile, le jeu n'a qu'une vue : les copines sont masquées par la
          * feuille de style, c'est le médaillon flottant qui la remplace. */
-        if (canvasLoupeJeu.offsetWidth > 0) {
-          ajusterCanvas(canvasLoupeJeu);
-          vueLoupeJeu.rendre(etat.p, horloge);
+        if (canvasCopinesJeu.offsetWidth > 0) {
+          ajusterCanvas(canvasCopinesJeu);
+          vueCopinesJeu.rendre(etat.p, horloge);
         }
       }
       dessinerMedaillon();
@@ -439,7 +439,7 @@ function boucle(maintenant) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Le médaillon flottant (mobile) : la loupe, toujours visible          */
+/* Le médaillon flottant (mobile) : les copines, toujours visibles     */
 /* ------------------------------------------------------------------ */
 
 function canvasHorsEcran(canvas) {
@@ -472,7 +472,7 @@ function placerMedaillon() {
 
 function gererMedaillon() {
   placerMedaillon();
-  var visible = estMobile && (medaillonAncre() || canvasHorsEcran(canvasLoupe));
+  var visible = estMobile && (medaillonAncre() || canvasHorsEcran(canvasCopines));
   if (medaillon.hidden === !visible) return;
   medaillon.hidden = !visible;
   if (visible) dessinerMedaillon();
@@ -482,14 +482,14 @@ function dessinerMedaillon() {
   if (medaillon.hidden) return;
   ajusterCanvas(canvasMedaillon);
   var ctx = canvasMedaillon.getContext('2d');
-  dessinerMiniLoupe(ctx, canvasMedaillon.width, canvasMedaillon.height, etat.p);
+  dessinerMiniCopines(ctx, canvasMedaillon.width, canvasMedaillon.height, etat.p);
 }
 
 medaillon.addEventListener('click', function () {
   try {
-    canvasLoupe.scrollIntoView({ behavior: mouvementReduit ? 'auto' : 'smooth', block: 'center' });
+    canvasCopines.scrollIntoView({ behavior: mouvementReduit ? 'auto' : 'smooth', block: 'center' });
   } catch (e) {
-    canvasLoupe.scrollIntoView(true);
+    canvasCopines.scrollIntoView(true);
   }
 });
 
@@ -870,8 +870,8 @@ function blocsScenario(scn) {
   return [
     { id: 'scn-' + scn.id + '-intro', texte: texteOral(scn.intro), pause: 120 },
     { id: 'scn-' + scn.id + '-dehors', texte: texteOral(scn.dehors) },
-    { id: 'transition-loupe', texte: texteOral(VOIX_TRANSITIONS.loupe), pause: 120 },
-    { id: 'scn-' + scn.id + '-loupe', texte: texteOral(scn.loupe) }
+    { id: 'transition-copines', texte: texteOral(VOIX_TRANSITIONS.copines), pause: 120 },
+    { id: 'scn-' + scn.id + '-copines', texte: texteOral(scn.copines) }
   ];
 }
 

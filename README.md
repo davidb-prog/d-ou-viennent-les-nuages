@@ -31,23 +31,25 @@ météorologie, née avec lui.
   elle réapparaît dans le froid, tout en haut, pour faire un nuage avec ses
   copines. Puis le nuage, trop lourd, pleut sur la montagne, et la rivière
   ramène la goutte à la mer.
-- **La loupe « De tout près »**, toujours synchronisée : douze billes d'eau
-  serrées dans la mer, éparses et effacées dans la vapeur, regroupées en trois
-  gouttelettes dans le nuage, collées en une grosse goutte dans la pluie — la
-  première bille, c'est elle, elle a le même sourire.
+- **La vue « Avec ses copines »**, toujours synchronisée : la même goutte avec
+  sa bande, à sa taille — serrées dans la mer, éparpillées et effacées en
+  pointillés dans la vapeur, regroupées en petits groupes sous le nuage,
+  collées dans une grosse goutte quand il pleut. Pas de loupe ni de « billes
+  d'eau » : à 5 ans on n'a pas le modèle des petits morceaux de matière, on a
+  celui de la bande qui se serre ou s'éparpille.
 - **La lecture automatique** : le voyage avance tout seul (un tour en ~85 s),
   bouton ⏸/▶ — et tout geste de l'enfant la met en pause.
 - **Les quatre boutons-moments** « 🎲 Joue avec la goutte » : la goutte glisse
   en douceur jusqu'au moment choisi, toujours dans le sens du voyage, puis la
   micro-histoire raconte le même instant des deux regards (🏔️ dehors /
-  🔍 à la loupe) — avec sa version sonore.
+  👭 ses copines) — avec sa version sonore.
 - **Le jeu « 🎯 Fabrique le moment ! »** : faire disparaître la goutte, fabriquer
   un nuage, faire pleuvoir sur la montagne, ramener la goutte à la mer.
 - **Le conteur** : l'explication et les histoires s'écoutent. Prêt pour la
   **voix enregistrée** (mp3 ElevenLabs commités, manifeste de cohérence) avec
   la synthèse vocale du navigateur en repli permanent — rien ne part jamais
   sur Internet. Sans synthèse, les boutons se cachent et le site reste complet.
-- **Le médaillon flottant (mobile)** : quand la loupe sort de l'écran, une
+- **Le médaillon flottant (mobile)** : quand la vue des copines sort de l'écran, une
   miniature suit l'enfant en haut à droite — un tap y ramène.
 - **La note aux parents** en deux temps : « Comment on s'en sert », puis chaque
   simplification assumée avec les vrais chiffres — et les mots savants de la
@@ -107,10 +109,13 @@ manifeste est vide (c'est le cas), tout passe à la synthèse. Marche à suivre 
   gouttelettes recondensées.
 - **Il pleut « sur la montagne ».** Il pleut partout où l'air humide se
   refroidit assez ; le relief force l'air à monter (pluies orographiques).
-- **Douze billes d'eau à la loupe** pour des molécules par millions de
-  milliards ; une gouttelette de nuage (~0,01 mm) est cent fois plus petite
-  qu'une goutte de pluie (~1 mm). Les billes racontent le principe : serrées
-  dans le liquide, éparses dans le gaz, regroupées dans le nuage.
+- **La goutte et ses copines** : la seconde vue montre l'eau comme une petite
+  bande de sept personnages, à la taille de la goutte. En vrai une goutte
+  contient des molécules par millions de milliards, une gouttelette de nuage
+  (~0,01 mm) est cent fois plus petite qu'une goutte de pluie (~1 mm), et la
+  vapeur est un gaz, pas des gouttes éparpillées. La bande raconte le
+  principe : serrée dans le liquide, éparpillée dans le gaz, regroupée dans
+  le nuage.
 - **Le froid à hauteur fixe** (`ALTITUDE_FROID`). En vrai l'air perd ~6 °C par
   kilomètre et la base d'un nuage d'été se trouve souvent entre 1 000 et
   2 000 m ; la température du modèle est une simple décroissance linéaire.
@@ -127,9 +132,10 @@ manifeste est vide (c'est le cas), tout passe à la synthèse. Marche à suivre 
 index.html           la page unique (socle SEO + carte de partage dans le <head>)
 css/style.css        le thème de la série météorologie + Baloo 2
 js/model.js          modèle pur : la boucle du voyage, le paysage, les étapes,
-                     la visibilité, le nuage, la loupe, les textes
+                     la visibilité, le nuage, la bande des copines, les textes
 js/vue-dehors.js     le paysage et la goutte (geste-signature)
-js/vue-loupe.js      la même eau vue à la loupe (+ dessinerMiniLoupe, médaillon)
+js/goutte.js         le dessin de la goutte, partagé par les deux vues
+js/vue-copines.js    la goutte et sa bande (+ dessinerMiniCopines, médaillon)
 js/main.js           câblage : boucle rAF, lecture auto, curseur, geste,
                      scénarios, jeu, conteur, médaillon
 test/                tests du modèle et de la voix (Node)

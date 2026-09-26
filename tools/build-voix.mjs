@@ -309,9 +309,8 @@ function contexteDe(b) {
     const prev = blocs.find((x) => x.id === 'histoire-' + (n - 1));
     return prev ? prev.texte : null;
   }
-  if (b.id.indexOf('phrase-') === 0) return 'Et pendant ce temps, là-bas…';
-  if (b.id.indexOf('scn-') === 0) return 'Chez nous…';
-  if (b.id.indexOf('trans-') === 0) return 'Il est midi pile : à table !';
+  /* les récits des scénarios portent déjà leur amorce (champ precedent du
+   * corpus) ; une intro s'annonce elle-même, une consigne ou un bravo aussi */
   return null;
 }
 

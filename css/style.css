@@ -133,7 +133,7 @@ main { max-width: 1180px; margin: 0 auto; padding: 0 20px 60px; }
 }
 .titre-scene { flex: 1 1 auto; font-weight: 700; }
 .bouton-lecture { padding: 5px 12px; font-size: .8rem; border-radius: 999px; }
-/* le ⏸/▶ est écrit dans la ligne « À la loupe » (la seconde vue) ; sur
+/* le ⏸/▶ est écrit dans la ligne « Avec ses copines » (la seconde vue) ; sur
    grand écran il remonte en haut à droite du panneau : un seul bouton,
    deux places */
 @media (min-width: 880px) {
@@ -157,7 +157,7 @@ main { max-width: 1180px; margin: 0 auto; padding: 0 20px 60px; }
   border-color: var(--teal); box-shadow: 0 0 0 2px rgba(70, 194, 165, 0.35);
 }
 
-/* la vue qu'on manipule (dehors, 5/4) à 1,25 colonne, la loupe (1/1) à 1 :
+/* la vue qu'on manipule (dehors, 5/4) à 1,25 colonne, les copines (1/1) à 1 :
    les deux tombent PILE à la même hauteur */
 .grille-vues {
   display: grid;
@@ -174,23 +174,23 @@ main { max-width: 1180px; margin: 0 auto; padding: 0 20px 60px; }
   display: flex; align-items: center; gap: 6px;
 }
 .entete-vue-dehors { color: var(--teal); }
-.entete-vue-loupe { color: var(--violet); }
+.entete-vue-copines { color: var(--violet); }
 
 .cadre-canvas { position: relative; border-radius: 12px; overflow: hidden; background: #171f36; border: 1px solid var(--border); }
 .ratio-dehors { aspect-ratio: 5 / 4; }
-.ratio-loupe { aspect-ratio: 1 / 1; }
+.ratio-copines { aspect-ratio: 1 / 1; }
 /* repli pour navigateurs sans aspect-ratio (Safari iOS < 15) : hauteurs fixes */
 @supports not (aspect-ratio: 1 / 1) {
   .ratio-dehors { height: min(44vw, 520px); }
-  .ratio-loupe { height: min(36vw, 420px); }
+  .ratio-copines { height: min(36vw, 420px); }
 }
 .cadre-canvas canvas { position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%; display: block; }
 
 /* le geste posé sur la vue « dehors » appartient TOUJOURS au glisser de la
    goutte — un doigt un peu de travers ne part jamais en défilement */
 .cadre-canvas.ratio-dehors, .vues-jeu .cadre-jeu-dehors { touch-action: none; }
-/* la loupe ne se manipule pas : le doigt posé dessus fait défiler la page */
-.cadre-canvas.ratio-loupe { touch-action: pan-x pan-y; }
+/* la vue des copines ne se manipule pas : le doigt posé dessus fait défiler la page */
+.cadre-canvas.ratio-copines { touch-action: pan-x pan-y; }
 #canvas-dehors, #canvas-dehors-jeu { touch-action: none; cursor: grab; }
 #canvas-dehors.attrape, #canvas-dehors-jeu.attrape { cursor: grabbing; }
 
@@ -201,7 +201,7 @@ main { max-width: 1180px; margin: 0 auto; padding: 0 20px 60px; }
   line-height: 1.45;
   min-height: 2.9em;
 }
-#phrase-loupe { min-height: 4.35em; }
+#phrase-copines { min-height: 4.35em; }
 
 /* la bulle « attrape-moi », SOUS la vue qu'on manipule (éphémère sur
    mobile, elle reste sur ordinateur) */
@@ -315,7 +315,7 @@ main { max-width: 1180px; margin: 0 auto; padding: 0 20px 60px; }
   min-width: 9.2em; text-align: center; box-sizing: border-box;
 }
 .puce-histoire-dehors { background: rgba(70, 194, 165, .14); color: var(--teal); border: 1px solid rgba(70, 194, 165, .5); }
-.puce-histoire-loupe { background: rgba(169, 139, 255, .14); color: var(--violet); border: 1px solid rgba(169, 139, 255, .5); }
+.puce-histoire-copines { background: rgba(169, 139, 255, .14); color: var(--violet); border: 1px solid rgba(169, 139, 255, .5); }
 .texte-histoire { margin: 2px 0 0; }
 
 /* ---------- la boîte d'explication (à lire… ou à écouter) ---------- */
@@ -364,7 +364,7 @@ main { max-width: 1180px; margin: 0 auto; padding: 0 20px 60px; }
   background: rgba(255, 207, 92, .12); border: 1px solid rgba(255, 207, 92, .55);
   color: var(--sun); font-weight: 700; font-size: 1.05rem;
 }
-.entete-jeu .medaillon-loupe { display: none; }
+.entete-jeu .medaillon-copines { display: none; }
 
 /* ---------- note aux parents (repliée) ---------- */
 
@@ -391,7 +391,7 @@ main { max-width: 1180px; margin: 0 auto; padding: 0 20px 60px; }
 
 /* ---------- le médaillon flottant (mobile) ---------- */
 
-.medaillon-loupe {
+.medaillon-copines {
   position: fixed;
   right: 14px;
   top: 14px;
@@ -406,14 +406,14 @@ main { max-width: 1180px; margin: 0 auto; padding: 0 20px 60px; }
   z-index: 10;
   overflow: hidden;
 }
-.medaillon-loupe canvas {
+.medaillon-copines canvas {
   display: block;
   width: 100%;
   height: 100%;
   border-radius: 50%;
 }
 @media (min-width: 880px) {
-  .medaillon-loupe { display: none !important; }
+  .medaillon-copines { display: none !important; }
 }
 
 /* ---------- boutons génériques ---------- */
@@ -482,13 +482,13 @@ button:focus-visible, input:focus-visible, a:focus-visible {
   .grille-vues { grid-template-columns: 1fr; gap: 6px; }
   /* les DEUX vues, leurs phrases ET la frise tiennent dans un écran de
      téléphone (~715 px visibles) : hauteurs EXPLICITES (jamais aspect-ratio
-     + max-height). La frise se paie sur la loupe, pas sur la vue qu'on
+     + max-height). La frise se paie sur les copines, pas sur la vue qu'on
      manipule. */
   .grille-vues .ratio-dehors { aspect-ratio: auto; height: min(62vw, 31vh); }
-  .grille-vues .ratio-loupe { aspect-ratio: auto; height: min(44vw, 20vh); }
+  .grille-vues .ratio-copines { aspect-ratio: auto; height: min(44vw, 20vh); }
   .entete-vue { margin-bottom: 2px; }
   .phrase-vue { margin-top: 3px; line-height: 1.38; font-size: .88rem; }
-  #phrase-loupe { min-height: 3.9em; }
+  #phrase-copines { min-height: 3.9em; }
 
   .boutons-scenarios { grid-template-columns: 1fr 1fr; }
   .scn { min-height: 64px; }
@@ -513,7 +513,7 @@ button:focus-visible, input:focus-visible, a:focus-visible {
     gap: 8px 12px; align-items: center;
   }
   .panneau-jeu.jeu-ouvert .entete-jeu h2 { grid-area: titre; }
-  .entete-jeu .medaillon-loupe {
+  .entete-jeu .medaillon-copines {
     display: block; grid-area: medaillon; position: static;
     width: 60px; height: 60px; box-shadow: none;
   }
@@ -524,9 +524,9 @@ button:focus-visible, input:focus-visible, a:focus-visible {
   .actions-jeu .bouton-jeu { flex: 1 1 0; padding-left: 8px; padding-right: 8px; font-size: .9rem; white-space: nowrap; }
 
   /* le jeu sur mobile : une seule vue (dehors, qu'on manipule) — c'est le
-     médaillon flottant qui montre la loupe */
+     médaillon flottant qui montre les copines */
   .vues-jeu { grid-template-columns: 1fr; }
-  .cadre-jeu-loupe { display: none; }
+  .cadre-jeu-copines { display: none; }
 
   /* la boîte d'explication se replie (le résumé n'apparaît qu'ici) */
   .panneau-explication { padding: 4px 16px 6px; }
@@ -548,7 +548,7 @@ button:focus-visible, input:focus-visible, a:focus-visible {
   .entete-scene { font-size: .82rem; }
   .entete-vue { flex-wrap: wrap; }
   .entete-vue .hint { flex-basis: 100%; font-size: .72rem; }
-  .entete-vue-loupe .bouton-lecture { margin-left: auto; min-height: 36px; padding: 4px 12px; font-size: .9rem; }
+  .entete-vue-copines .bouton-lecture { margin-left: auto; min-height: 36px; padding: 4px 12px; font-size: .9rem; }
   .defi-jeu { font-size: 1.15rem; }
   .bravo-jeu { font-size: 1rem; }
 }

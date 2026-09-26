@@ -59,7 +59,7 @@ const blocs = corpus();
 check('les récits des scénarios portent leur amorce de prosodie (previous_text)',
   SCENARIOS.every((s) =>
     blocs.some((b) => b.id === 'scn-' + s.id + '-dehors' && b.precedent === texteOral(s.intro)) &&
-    blocs.some((b) => b.id === 'scn-' + s.id + '-loupe' && b.precedent === texteOral(VOIX_TRANSITIONS.loupe))));
+    blocs.some((b) => b.id === 'scn-' + s.id + '-copines' && b.precedent === texteOral(VOIX_TRANSITIONS.copines))));
 // EMOJI_RE porte le drapeau /g (stateful avec .test) : on le clone sans
 const emojiUne = new RegExp(EMOJI_RE.source, 'u');
 check('aucun émoji dans les textes oraux',
@@ -107,7 +107,7 @@ console.log('La cohérence site ↔ corpus');
     SCENARIOS.every((s) =>
       parId['scn-' + s.id + '-intro'] === texteOral(s.intro) &&
       parId['scn-' + s.id + '-dehors'] === texteOral(s.dehors) &&
-      parId['scn-' + s.id + '-loupe'] === texteOral(s.loupe)));
+      parId['scn-' + s.id + '-copines'] === texteOral(s.copines)));
   check('chaque défi du jeu a sa consigne et son bravo, au texte exact',
     DEFIS.every((d) =>
       parId['defi-' + d.id + '-consigne'] === texteOral(d.consigne) &&

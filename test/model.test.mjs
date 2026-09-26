@@ -12,7 +12,7 @@ import {
   FONDU, forme, visibilite, goutteToujoursLa,
   chargeNuage, positionNuage, ilPleut, forcePluie, debitRiviere,
   ecartement, regroupement, agitation,
-  typographie, phraseDehors, phraseLoupe,
+  typographie, phraseDehors, phraseCopines,
   LECTURE_TOUR_SEC, LECTURE_P_PAR_SEC, SCENARIOS, VOIX_TRANSITIONS,
   DEFI_ATTENTE_MS, DEFI_SORTIE_MARGE, DEFIS, dansFenetre, defiReussi, defiEncoreProche, deltaCourt,
   EMOJI_RE, texteOral
@@ -254,10 +254,10 @@ test('le nuage pleut au-dessus de la montagne, là où la goutte tombe', functio
 });
 
 /* ------------------------------------------------------------------ */
-/* Ce qu'on voit à la loupe                                              */
+/* La goutte et ses copines (la seconde vue)                             */
 /* ------------------------------------------------------------------ */
 
-test('à la loupe, les billes sont serrées dans l’eau, éparses dans la vapeur, en petits amas dans le nuage', function () {
+test('les copines sont serrées dans l’eau, éparpillées dans la vapeur, en petits groupes dans le nuage', function () {
   assert.ok(ecartement(0.05) < 0.3);
   presque(ecartement((P_MER_FIN + P_MONTEE_FIN) / 2), 1);
   assert.ok(ecartement(0.5) > 0.3 && ecartement(0.5) < 0.7);
@@ -270,7 +270,7 @@ test('à la loupe, les billes sont serrées dans l’eau, éparses dans la vapeu
     assert.ok(regroupement(p) >= 0 && regroupement(p) <= 1);
     assert.ok(agitation(p) > 0 && agitation(p) <= 1);
   }
-  assert.ok(agitation(0.05) > agitation(0.46), 'les billes chaudes s’agitent plus que les froides');
+  assert.ok(agitation(0.05) > agitation(0.46), 'les copines chaudes gigotent plus que les froides');
 });
 
 /* ------------------------------------------------------------------ */
@@ -281,7 +281,7 @@ test('chaque instant a ses deux phrases, et elles racontent l’étape', functio
   var attendus = { mer: /mer/i, montee: /disparaît|voit plus|réapparaît/i, nuage: /nuage/i, pluie: /pleut|tombe/i, riviere: /rivière|mer/i };
   for (var p = 0; p < 1; p += 0.005) {
     var d = phraseDehors(p);
-    var l = phraseLoupe(p);
+    var l = phraseCopines(p);
     assert.ok(d.length > 10 && l.length > 10);
     assert.ok(attendus[etape(p)].test(d), 'phrase hors sujet à p = ' + p.toFixed(3) + ' : ' + d);
     assert.ok(d.indexOf("'") === -1 && l.indexOf("'") === -1, 'apostrophe droite dans ' + d + l);
@@ -303,7 +303,7 @@ test('quatre scénarios, un par étape-clé, chacun posé au bon endroit du voya
   var teintes = {};
   SCENARIOS.forEach(function (s, i) {
     assert.equal(etape(s.p), etapesVoulues[i], s.id);
-    assert.ok(s.intro && s.dehors && s.loupe && s.label && s.sub && s.emoji);
+    assert.ok(s.intro && s.dehors && s.copines && s.label && s.sub && s.emoji);
     assert.ok(s.intro.indexOf('…') !== -1, 'l’intro est une amorce en suspens : ' + s.id);
     assert.ok(!teintes[s.teinte], 'teinte en double : ' + s.teinte);
     teintes[s.teinte] = true;
@@ -311,7 +311,7 @@ test('quatre scénarios, un par étape-clé, chacun posé au bon endroit du voya
   });
   assert.equal(etape(SCENARIOS[0].p), 'montee');
   assert.equal(visibilite(SCENARIOS[0].p), 0, 'le premier scénario montre la goutte invisible');
-  assert.ok(VOIX_TRANSITIONS.loupe.length > 5);
+  assert.ok(VOIX_TRANSITIONS.copines.length > 5);
 });
 
 test('chaque défi se gagne dans une fenêtre où son moment est vraiment fabriqué', function () {
@@ -373,7 +373,7 @@ test('la voix ne lit ni les émojis, ni les guillemets, et recolle la ponctuatio
   assert.equal(texteOral('On dit « vapeur »… en vrai'), 'On dit vapeur… en vrai');
   assert.equal(texteOral('la mer — et la rivière — pareil'), 'la mer, et la rivière, pareil');
   SCENARIOS.forEach(function (s) {
-    [s.intro, s.dehors, s.loupe].forEach(function (t) {
+    [s.intro, s.dehors, s.copines].forEach(function (t) {
       assert.ok(!EMOJI_RE.test(texteOral(t)));
       EMOJI_RE.lastIndex = 0;
     });

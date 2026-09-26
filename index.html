@@ -91,16 +91,16 @@
           <!-- le ⏸/▶ vit ICI, dans la ligne de la seconde vue : sur téléphone il
                reste sous le pouce ; sur grand écran le CSS le pose en haut à
                droite du panneau (un seul bouton, un seul câblage) -->
-          <h2 class="entete-vue entete-vue-loupe"><span class="titre-vue">🔍 De tout près</span>
+          <h2 class="entete-vue entete-vue-copines"><span class="titre-vue">👭 Avec ses copines</span>
             <button id="bouton-lecture" class="bouton-lecture" aria-pressed="true"><span
                 class="lecture-on" aria-hidden="true">⏸ Pause</span><span
                 class="lecture-off" aria-hidden="true">▶ Lecture</span></button>
-            <span class="hint">la même eau, vue à la loupe</span></h2>
-          <div class="cadre-canvas ratio-loupe">
-            <canvas id="canvas-loupe"
-              aria-label="La loupe : la même eau vue de tout près. Douze billes d’eau serrées les unes contre les autres dans la mer ; chauffées, elles s’écartent et s’effacent, c’est la vapeur ; dans le froid, elles se rapprochent en petites gouttelettes, c’est le nuage ; collées en une grosse goutte, c’est la pluie. Cette vue suit la goutte de la scène, elle ne se manipule pas."></canvas>
+            <span class="hint">sa bande, au même moment</span></h2>
+          <div class="cadre-canvas ratio-copines">
+            <canvas id="canvas-copines"
+              aria-label="La goutte et ses copines, au même moment que la scène : serrées les unes contre les autres dans la mer ; chauffées, elles s’éparpillent et s’effacent, c’est la vapeur ; dans le froid, elles se rapprochent en petits groupes, c’est le nuage ; collées en une grosse goutte, c’est la pluie. Cette vue suit la goutte de la scène, elle ne se manipule pas."></canvas>
           </div>
-          <p class="phrase-vue" id="phrase-loupe" aria-live="polite"></p>
+          <p class="phrase-vue" id="phrase-copines" aria-live="polite"></p>
         </div>
       </div>
 
@@ -175,9 +175,9 @@
             <canvas id="canvas-dehors-jeu"
               aria-label="Le même paysage que plus haut, synchronisé : promène la goutte ici pour fabriquer le moment demandé."></canvas>
           </div>
-          <div class="cadre-canvas ratio-loupe cadre-jeu-loupe">
-            <canvas id="canvas-loupe-jeu"
-              aria-label="La même loupe que plus haut, synchronisée : l’eau de tout près, au moment que tu fabriques."></canvas>
+          <div class="cadre-canvas ratio-copines cadre-jeu-copines">
+            <canvas id="canvas-copines-jeu"
+              aria-label="La goutte et ses copines, comme plus haut, synchronisées : la bande au moment que tu fabriques."></canvas>
           </div>
         </div>
         <p class="bravo-jeu" id="bravo-jeu" aria-live="polite" hidden></p>
@@ -191,7 +191,7 @@
       <h3>Comment on s’en sert</h3>
       <ul>
         <li><strong>Le grand curseur du voyage commande tout.</strong> Les deux vues montrent le
-          même instant&nbsp;: le paysage dehors, et la même eau vue à la loupe. Le voyage avance
+          même instant&nbsp;: le paysage dehors, et la goutte avec ses copines. Le voyage avance
           tout seul&#8239;; le bouton ⏸ (ou la barre d’espace) le met en pause.</li>
         <li><strong>Le geste préféré des enfants&nbsp;:</strong> attraper la goutte et la promener le
           long de son chemin, dans un sens ou dans l’autre. Quand elle disparaît en montant, elle est
@@ -202,7 +202,7 @@
           Le choix est retenu d’une visite à l’autre, et rien ne part sur Internet.</li>
         <li><strong>Le jeu « Fabrique le moment&#8239;! »</strong>&nbsp;: faire disparaître la goutte,
           fabriquer un nuage, faire pleuvoir, la ramener à la mer, en la promenant. Sur téléphone,
-          un médaillon montre la loupe quand elle sort de l’écran.</li>
+          un médaillon montre les copines quand elles sortent de l’écran.</li>
       </ul>
 
       <h3>Ce que le site simplifie</h3>
@@ -217,9 +217,12 @@
         <li><strong>Le froid tout en haut, à hauteur fixe.</strong> L’air perd environ 6&nbsp;°C par
           kilomètre&#8239;; la base d’un nuage d’été est souvent entre 1&nbsp;000 et 2&nbsp;000 mètres.
           Et il pleut partout où l’air humide se refroidit assez, pas seulement sur la montagne.</li>
-        <li><strong>Douze billes d’eau à la loupe</strong>, pour des millions de milliards de
-          molécules. Une gouttelette de nuage est cent fois plus petite qu’une goutte de pluie. Les
-          billes racontent le principe&nbsp;: serrées dans le liquide, éparses dans la vapeur.</li>
+        <li><strong>La goutte et ses copines.</strong> La seconde vue montre l’eau comme une petite
+          bande de personnages, à la taille de la goutte, parce qu’à 5 ans on ne se représente pas
+          encore la matière en petits morceaux. En vrai, une goutte contient des millions de
+          milliards de molécules, et la vapeur n’est pas des gouttes éparpillées mais un gaz. La
+          bande raconte le principe&nbsp;: serrée dans l’eau qu’on voit, éparpillée dans la vapeur,
+          regroupée dans le nuage.</li>
         <li><strong>Ni vent, ni neige, ni plantes.</strong> C’est le vent qui pousse le nuage vers la
           montagne&#8239;; par grand froid, les gouttelettes gèlent en flocons ou en grêlons&#8239;; et une
           bonne part de la vapeur vient des plantes et du sol humide.</li>
@@ -234,10 +237,10 @@
 
   </main>
 
-  <!-- Le médaillon flottant (mobile) : la loupe en miniature, toujours
-       visible quand la vraie loupe est sortie de l'écran. Un tap y ramène. -->
-  <button id="medaillon-loupe" class="medaillon-loupe" hidden
-    aria-label="L’eau à la loupe en ce moment — remonter à la loupe">
+  <!-- Le médaillon flottant (mobile) : les copines en miniature, toujours
+       visibles quand leur vraie vue est sortie de l'écran. Un tap y ramène. -->
+  <button id="medaillon-copines" class="medaillon-copines" hidden
+    aria-label="La goutte et ses copines en ce moment — remonter à leur vue">
     <canvas id="canvas-medaillon" aria-hidden="true"></canvas>
   </button>
 

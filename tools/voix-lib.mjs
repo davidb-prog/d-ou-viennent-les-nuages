@@ -4,7 +4,7 @@
 //
 // Tous les textes de cet épisode sont ÉCRITS (aucune phrase générée par
 // combinaison) : le corpus est une simple énumération — les scénarios, la
-// transition vers la loupe, les consignes et bravos du jeu, et les
+// transition vers les copines, les consignes et bravos du jeu, et les
 // paragraphes de la grande histoire lus dans index.html (la source de vérité
 // du site).
 
@@ -32,9 +32,9 @@ export function corpus() {
     ajouter('scn-' + scn.id + '-intro', scn.intro);
     // l'amorce de prosodie : le récit s'entend dans la foulée de son annonce
     ajouter('scn-' + scn.id + '-dehors', scn.dehors, scn.intro);
-    ajouter('scn-' + scn.id + '-loupe', scn.loupe, VOIX_TRANSITIONS.loupe);
+    ajouter('scn-' + scn.id + '-copines', scn.copines, VOIX_TRANSITIONS.copines);
   }
-  ajouter('transition-loupe', VOIX_TRANSITIONS.loupe);
+  ajouter('transition-copines', VOIX_TRANSITIONS.copines);
 
   for (const defi of DEFIS) {
     ajouter('defi-' + defi.id + '-consigne', defi.consigne);
